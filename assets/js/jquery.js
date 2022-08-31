@@ -7,6 +7,26 @@ class testCase {
     }
 }
 
+const testCases = [];
+const form = $('form');
+const regionField = $('regions');
+const selectedTypes = [];    
+let hasError = false;
+let selectedStatus = "";
+
+$(function(){
+    getRegions();
+});
+
+$("#add_case").on("click", function(event){
+    event.preventDefault()
+    switchToAddCase();
+});
+$("#saved_cases").on("click", function(event){
+    event.preventDefault()
+    switchToCases();
+});
+
 async function getRegions() {    
     try{
         const response = await fetch('/assets/js/countries.json');
@@ -21,22 +41,18 @@ async function getRegions() {
     
 }
 
-const testCases = [];
-const form = $('form');
-const regionField = $('regions');
-
-$("#add_case").on("click", function(event){
-    event.preventDefault()
-    switchTab("add")
-});
-$("#saved_cases").on("click", function(event){
-    event.preventDefault()
-    switchTab("show")
-});
-
-$(function(){
-    getRegions();
-});
+form.on('submit', function(e){
+    e.preventDefault();   
+    validateForm(); 
+    
+    if (hasError){
+        return;
+    }    
+    const newTestCase = new testCase($('#name').val(), $('#regions').val(), selectedStatus, selectedTypes);
+    testCases.push(newTestCase);
+    resetFields();
+    switchToCases();
+})
 
 function hideError(){
     const errorElements = $('.error').each(function(){
@@ -44,12 +60,7 @@ function hideError(){
     });
 }
 
-form.on('submit', function(e){
-    e.preventDefault();
-    const selectedTypes = [];    
-    let hasError = false;
-    let selectedStatus = "";
-    
+function validateForm(){
     if ($('#name').val() === ""){
         $('.name-field').removeClass('hide');
         hasError = true;
@@ -58,50 +69,46 @@ form.on('submit', function(e){
     if ($('#regions').val() === ""){
         $('.region-field').removeClass('hide');
         hasError = true;
-    }    
+    }  
+    
+    $('[name="status"').each(function(){
+        if ($(this).is(":checked")){
+            selectedStatus = $(this).val()
+        }
+    })  
     
     $('[name="type"]').each(function(){
         if($(this).is(":checked")){
             selectedTypes.push($(this).val())
         }
-    });
-
-    $('[name="status"').each(function(){
-        if ($(this).is(":checked")){
-            selectedStatus = $(this).val()
-        }
-    })
+    });   
   
     if (selectedTypes.length < 1){
         $('.type-field').removeClass('hide');
         hasError = true;
     }
-    
-    if (hasError){
-        return;
-    }
-    
-    const newTestCase = new testCase($('#name').val(), $('#regions').val(), selectedStatus, selectedTypes)
-    testCases.push(newTestCase);
+}
+
+function switchToAddCase(){
+    $('#add_testcase').removeClass('hide');
+    $('#add_case').addClass('btn-active');
+    $('#show_testcase').addClass('hide');
+    $('#saved_cases').removeClass('btn-active');
+
     resetFields();
-    switchTab("show");   
-})
+}
 
-function switchTab(goal){
-  
-    if (goal === "add"){
-        $('#add_testcase').removeClass('hide');
-        $('#add_case').addClass('btn-active');
-        $('#show_testcase').addClass('hide');
-        $('#saved_cases').removeClass('btn-active');
-    }
-    if (goal === "show"){
-        $('#add_testcase').addClass('hide');
-        $('#add_case').removeClass('btn-active');
-        $('#show_testcase').removeClass('hide');
-        $('#saved_cases').addClass('btn-active');
+function switchToCases(){
+    $('#add_testcase').addClass('hide');
+    $('#add_case').removeClass('btn-active');
+    $('#show_testcase').removeClass('hide');
+    $('#saved_cases').addClass('btn-active');
 
-        const accordionWrapper = $('#accordion');
+    createAccordion();
+}
+
+function createAccordion(){
+    const accordionWrapper = $('#accordion');
         accordionWrapper.html('');
         let caseNumber = 1;
         testCases.forEach(el => {            
@@ -132,7 +139,8 @@ function switchTab(goal){
                 $(this).parent().toggleClass('accordion--open');
             })
         })
-    }
+
+        $('.accordion-wrapper:last-child').addClass('accordion--open');
 }
 
 function resetFields(){

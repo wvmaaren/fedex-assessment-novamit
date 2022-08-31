@@ -10,22 +10,38 @@ class testCase {
 const testCases = [];
 const form = document.getElementById('form');
 const regionField = document.getElementById('regions');
+const typeFields = document.getElementsByName('type');
+const nameField = document.getElementById('name');    
+const statusField = document.getElementsByName('status');
+const selectedTypes = [];    
+let hasError = false;
+let selectedStatus = "";
+
 document.getElementById("add_case").addEventListener("click", function(event){
-    event.preventDefault()
+    event.preventDefault();
+    switchToAddCase();
   });
+
 document.getElementById("saved_cases").addEventListener("click", function(event){
-event.preventDefault()
+    event.preventDefault();
+    switchToCases();
 });
 
 form.addEventListener('submit', (event => {
     event.preventDefault();
-    const selectedTypes = [];    
-    let hasError = false;
-    let selectedStatus = "";
-    const typeFields = document.getElementsByName('type');
-    const nameField = document.getElementById('name');    
-    const statusField = document.getElementsByName('status');
+    validateForm();    
     
+    if (hasError){
+        return;
+    }
+    
+    const newTestCase = new testCase(nameField.value, regionField.value, selectedStatus, selectedTypes)
+    testCases.push(newTestCase);
+    resetFields();
+    switchToCases(); 
+}));
+
+function validateForm(){
     if (nameField.value === ""){
         document.querySelector('.name-field').classList.remove('hide');
         hasError = true;
@@ -52,15 +68,7 @@ form.addEventListener('submit', (event => {
         document.querySelector('.type-field').classList.remove('hide');
         hasError = true;
     }
-    
-    if (hasError){
-        return;
-    }
-    
-    const newTestCase = new testCase(nameField.value, regionField.value, selectedStatus, selectedTypes)
-    testCases.push(newTestCase);
-    switchTab("show");   
-}));
+}
 
 
 async function getRegions() {   
@@ -85,31 +93,26 @@ function hideError(){
     })
 }
 
-document.getElementById("add_case").addEventListener("click", function(event){
-    event.preventDefault()
-    switchTab("add")
-  });
+function switchToAddCase(){
+    document.getElementById('add_testcase').classList.remove('hide');
+    document.getElementById('add_case').classList.add('btn-active');
+    document.getElementById('show_testcase').classList.add('hide');
+    document.getElementById('saved_cases').classList.remove('btn-active');
 
-document.getElementById("saved_cases").addEventListener("click", function(event){
-    event.preventDefault()
-    switchTab("show")
-});
+    resetFields();
+}
 
-function switchTab(goal){
-  
-    if (goal === "add"){
-        document.getElementById('add_testcase').classList.remove('hide');
-        document.getElementById('add_case').classList.add('btn-active');
-        document.getElementById('show_testcase').classList.add('hide');
-        document.getElementById('saved_cases').classList.remove('btn-active');
-    }
-    if (goal === "show"){
-        document.getElementById('add_testcase').classList.add('hide');
-        document.getElementById('add_case').classList.remove('btn-active');
-        document.getElementById('show_testcase').classList.remove('hide');
-        document.getElementById('saved_cases').classList.add('btn-active');
+function switchToCases(){
+    document.getElementById('add_testcase').classList.add('hide');
+    document.getElementById('add_case').classList.remove('btn-active');
+    document.getElementById('show_testcase').classList.remove('hide');
+    document.getElementById('saved_cases').classList.add('btn-active');
 
-        const accordionWrapper = document.getElementById('accordion');
+    createAccordion();
+}
+
+function createAccordion(){
+    const accordionWrapper = document.getElementById('accordion');
         accordionWrapper.innerHTML = '';
         let caseNumber = 1;
         testCases.forEach(el => {            
@@ -141,7 +144,15 @@ function switchTab(goal){
         function toggleItem(){
             this.parentNode.classList.toggle('accordion--open');
         }
-    }
+}
+
+function resetFields(){
+    document.getElementById('name').value = '';
+    document.getElementById('regions').value = '';
+    document.getElementById('status_active').checked = true;
+    typeFields.forEach( el => {
+        el.checked = false;
+    })
 }
 
 getRegions();
