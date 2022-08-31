@@ -8,11 +8,17 @@ class testCase {
 }
 
 async function getRegions() {    
-    const response = await fetch('/assets/js/countries.json');
-    const regions = await response.json();
-    regions.forEach(el => {
+    try{
+        const response = await fetch('/assets/js/countries.json');
+        const regions = await response.json();
+        regions.forEach(el => {
         $('#regions').append(`<option value="${el.name}">${el.name}</option>`);        
-    });
+        });
+    }
+    catch{
+        console.log('JSON feed not loaded...');
+    }
+    
 }
 
 const testCases = [];

@@ -63,13 +63,19 @@ form.addEventListener('submit', (event => {
 }));
 
 
-async function getRegions() {    
-    const response = await fetch('/assets/js/countries.json');
-    const regions = await response.json();
-    regions.forEach(element => {
-        let newOption = new Option(element.name,element.name);
-        regionField.add(newOption,undefined);
-    });
+async function getRegions() {   
+    try{
+        const response = await fetch('/assets/js/countries.json');
+        const regions = await response.json();
+        regions.forEach(element => {
+            let newOption = new Option(element.name,element.name);
+            regionField.add(newOption,undefined);
+        });
+    } 
+    catch{
+        console.log('JSON feed not loaded...')
+    }
+    
 }
 
 function hideError(){
