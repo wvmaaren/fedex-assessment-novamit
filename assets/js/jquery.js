@@ -35,50 +35,6 @@ $("#saved_cases").on("click", function(event){
 });
 
 $(function(){
-    form.on('submit', function(e){
-        e.preventDefault();
-        const selectedTypes = [];    
-        let hasError = false;
-        let selectedStatus = "";
-        
-        if ($('#name').val() === ""){
-            $('.name-field').removeClass('hide');
-            hasError = true;
-        }
-        
-        if ($('#regions').val() === ""){
-            $('.region-field').removeClass('hide');
-            hasError = true;
-        }    
-        
-        $('[name="type"]').each(function(){
-            if($(this).is(":checked")){
-                selectedTypes.push($(this).val())
-            }
-        });
-    
-        $('[name="status"').each(function(){
-            if ($(this).is(":checked")){
-                selectedStatus = $(this).val()
-            }
-        })
-      
-        if (selectedTypes.length < 1){
-            $('.type-field').removeClass('hide');
-            hasError = true;
-        }
-        
-        if (hasError){
-            return;
-        }
-        
-        const newTestCase = new testCase($('#name').val(), $('#regions').val(), selectedStatus, selectedTypes)
-        testCases.push(newTestCase);
-    
-        console.log(testCases)
-        switchTab("show");   
-    })
-
     getRegions();
 });
 
@@ -87,6 +43,49 @@ function hideError(){
         $(this).addClass('hide');
     });
 }
+
+form.on('submit', function(e){
+    e.preventDefault();
+    const selectedTypes = [];    
+    let hasError = false;
+    let selectedStatus = "";
+    
+    if ($('#name').val() === ""){
+        $('.name-field').removeClass('hide');
+        hasError = true;
+    }
+    
+    if ($('#regions').val() === ""){
+        $('.region-field').removeClass('hide');
+        hasError = true;
+    }    
+    
+    $('[name="type"]').each(function(){
+        if($(this).is(":checked")){
+            selectedTypes.push($(this).val())
+        }
+    });
+
+    $('[name="status"').each(function(){
+        if ($(this).is(":checked")){
+            selectedStatus = $(this).val()
+        }
+    })
+  
+    if (selectedTypes.length < 1){
+        $('.type-field').removeClass('hide');
+        hasError = true;
+    }
+    
+    if (hasError){
+        return;
+    }
+    
+    const newTestCase = new testCase($('#name').val(), $('#regions').val(), selectedStatus, selectedTypes)
+    testCases.push(newTestCase);
+    resetFields();
+    switchTab("show");   
+})
 
 function switchTab(goal){
   
@@ -134,4 +133,13 @@ function switchTab(goal){
             })
         })
     }
+}
+
+function resetFields(){
+    $('#name').val('');
+    $('#regions').val('');
+    $('#status_active').prop('checked', true);
+    $('[name="type"').each(function(){
+        $(this).prop('checked', false);
+    })
 }
