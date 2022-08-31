@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+        integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Fedex Assessment</title>
+</head>
+
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="/assets/img/fedex-logo.png" alt="logo">
+            </div>
+            <div class="icon-menu">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                    <path
+                        d="M256 112c-48.6 0-88 39.4-88 88C168 248.6 207.4 288 256 288s88-39.4 88-88C344 151.4 304.6 112 256 112zM256 240c-22.06 0-40-17.95-40-40C216 177.9 233.9 160 256 160s40 17.94 40 40C296 222.1 278.1 240 256 240zM256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-46.73 0-89.76-15.68-124.5-41.79C148.8 389 182.4 368 220.2 368h71.69c37.75 0 71.31 21.01 88.68 54.21C345.8 448.3 302.7 464 256 464zM416.2 388.5C389.2 346.3 343.2 320 291.8 320H220.2c-51.36 0-97.35 26.25-124.4 68.48C65.96 352.5 48 306.3 48 256c0-114.7 93.31-208 208-208s208 93.31 208 208C464 306.3 446 352.5 416.2 388.5z" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                    <path
+                        d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z" />
+                </svg>
+            </div>
+        </div>
+    </header>
+    <section>
+        <div class="container center">
+            <a href="" id="add_case" title="Add A/B test" class="btn btn-active">Create
+                a
+                new A/B case</a>
+            <a href="" id="saved_cases" title="Add A/B test" class="btn">Saved A/B
+                cases</a>
+        </div>
+    </section>
+    <section id="add_testcase">
+        <div class="container">
+            <h1>Create a new A/B Case:</h1>
+            <form id="form">
+                <div class="form-control">
+                    <div class="layered-input">
+                        <label for="name">Name:</label>
+                        <input id="name" type="text" onchange="hideError()" placeholder="Name of the A/B test" />
+                    </div>
+                    <p class="error hide name-field">This field can't be empty</p>
+                </div>
+                <div class="form-control">
+                    <div class="layered-input">
+                        <label for="regions">Region:</label>
+                        <select name="regions" id="regions">
+                            <option value="" selected>Choose the region to apply</option>
+                        </select>
+                    </div>
+                    <p class="error hide region-field">You must pick a region</p>
+                </div>
+                <div class="form-control">
+                    <p>Status:</p>
+                    <input type="radio" name="status" id="status_active" onchange="hideError()" checked
+                        value="active" />
+                    <label for="status_active">Active</label>
+                    <input type="radio" name="status" id="status_inactive" onchange="hideError()" value="inactive" />
+                    <label for="status_inactive">Inactive</label>
+                </div>
+                <div class="form-control">
+                    <p>Choose the type:</p>
+                    <input type="checkbox" name="type" value="Image" onchange="hideError()" id="cb-image">
+                    <label for="cb-image">Image</label>
+                    <input type="checkbox" name="type" value="Video" onchange="hideError()" id="cb-video">
+                    <label for="cb-video">Video</label>
+                    <input type="checkbox" name="type" value="Element" onchange="hideError()" id="cb-element">
+                    <label for="cb-element">Element</label>
+                    <p class="error hide type-field">At least one type must be selected</p>
+                </div>
+                <button type="submit" class="btn btn-secondary">Save</button>
+            </form>
+        </div>
+    </section>
+    <section id="show_testcase" class="hide">
+        <div class="container">
+            <h1>Summary</h1>
+            <div id="accordion">
+
+
+            </div>
+        </div>
+    </section>
+    <script src="/assets/js/jquery.js"></script>
+</body>
+
+</html>
